@@ -83,3 +83,45 @@ body {
 .animate-glow {
   animation: glow-pulse 6s ease-in-out infinite;
 }
+
+/* Legal pages (privacy, terms, delete account) */
+.legal-content h2 {
+  margin-top: 2.25rem;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.legal-content h2:first-child {
+  margin-top: 0;
+}
+
+.legal-content p,
+.legal-content li {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.legal-content ul {
+  margin-top: 0.5rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.legal-content li::marker {
+  color: var(--mint);
+}
+
+.legal-content strong {
+  color: var(--ink);
+}
+
+.legal-content a {
+  color: #0f9f84;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
