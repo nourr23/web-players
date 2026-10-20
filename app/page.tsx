@@ -300,6 +300,9 @@ export default function Home() {
               <Link href="/delete-account" className="transition hover:text-ink">
                 Delete account
               </Link>
+              <Link href="/support" className="transition hover:text-ink">
+                Support
+              </Link>
             </div>
           </div>
           <div className="border-t border-line">
