@@ -15,6 +15,12 @@ const deletionMailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
   "Hello,\n\nPlease delete my Padel Galaxio account and its data.\n\nThe email address of my account is: \n\nThank you.",
 )}`;
 
+const partialDeletionMailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
+  "Delete some of my data",
+)}&body=${encodeURIComponent(
+  "Hello,\n\nPlease delete the following data from my Padel Galaxio account:\n\n\nThe email address of my account is: \n\nThank you.",
+)}`;
+
 export default function DeleteAccountPage() {
   return (
     <LegalPage
@@ -67,6 +73,24 @@ export default function DeleteAccountPage() {
         <li>
           Information we must keep for legal or security reasons (for example
           reports of abusive behaviour), only for as long as required.
+        </li>
+      </ul>
+
+      <h2>Delete some of your data without deleting your account</h2>
+      <p>You can remove specific data at any time and keep your account:</p>
+      <ul>
+        <li>
+          <strong>In the app:</strong> delete your stories and posts, remove or change
+          your profile and cover photo, and clear your optional details (phone number,
+          height, weight) from <strong>Profile → Edit profile</strong>.
+        </li>
+        <li>
+          <strong>By email:</strong> to remove other specific data (for example
+          particular messages, photos or match media), email{" "}
+          <a href={partialDeletionMailto}>{SUPPORT_EMAIL}</a> from the address linked
+          to your account, with the subject “Delete some of my data”, and describe
+          what you want removed. We’ll process the request within{" "}
+          <strong>30 days</strong>.
         </li>
       </ul>
 
