@@ -76,10 +76,6 @@ export default function PrivacyPage() {
           <strong>Google</strong> and <strong>Apple</strong> — only if you choose to
           sign in with them.
         </li>
-        <li>
-          <strong>Google AdMob</strong> — only when the app shows optional rewarded
-          videos.
-        </li>
       </ul>
       <p>We may also share information when required by law.</p>
 
