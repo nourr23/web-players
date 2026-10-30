@@ -149,6 +149,13 @@ export default function Home() {
                 <StoreButtons />
               </div>
 
+              <Link
+                href="/book"
+                className="animate-rise-delay-2 mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#0f9f84] transition hover:text-ink"
+              >
+                Or book a court on the web →
+              </Link>
+
               <div className="animate-rise-delay-2 mt-8 flex flex-wrap items-center gap-6 text-sm text-muted">
                 <div className="flex items-center gap-2">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-mint-soft text-mint">
