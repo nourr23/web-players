@@ -2,9 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SiteHeader } from "./_components/site-header";
+import QRCode from "qrcode";
 
-const APP_STORE_URL = "#";
-const GOOGLE_PLAY_URL = "#";
+import { APP_STORE_URL, GOOGLE_PLAY_URL, SITE_URL } from "./_lib/site";
+
+/** Encoded in the QR code; app/download/route.ts sends each phone to its own store. */
+const DOWNLOAD_URL = `${SITE_URL}/download`;
 
 const features = [
   {
@@ -84,21 +87,51 @@ const steps = [
 function StoreButtons({ className = "" }: { className?: string }) {
   return (
     <div className={`flex flex-wrap gap-3 ${className}`}>
-      <a
+      <StoreBadge
         href={APP_STORE_URL}
-        className="inline-flex items-center gap-2.5 rounded-full bg-mint px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(30,201,167,0.35)] transition hover:-translate-y-0.5 hover:brightness-105"
-      >
-        <AppleIcon />
-        App Store
-      </a>
-      <a
+        icon={<AppleIcon />}
+        caption="Download on the"
+        store="App Store"
+      />
+      <StoreBadge
         href={GOOGLE_PLAY_URL}
-        className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:bg-mint-soft/60"
-      >
-        <PlayIcon />
-        Google Play
-      </a>
+        icon={<PlayIcon />}
+        caption="Get it on"
+        store="Google Play"
+      />
     </div>
+  );
+}
+
+function StoreBadge({
+  href,
+  icon,
+  caption,
+  store,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  caption: string;
+  store: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${caption} ${store}`}
+      className="inline-flex h-14 min-w-44 items-center gap-3 rounded-xl border border-black bg-black px-4 text-white shadow-[0_10px_30px_rgba(15,36,31,0.18)] transition hover:-translate-y-0.5 hover:bg-[#1a1a1a]"
+    >
+      <span className="[&>svg]:h-7 [&>svg]:w-7">{icon}</span>
+      <span className="flex flex-col leading-none">
+        <span className="text-[0.65rem] font-medium uppercase tracking-wide text-white/80">
+          {caption}
+        </span>
+        <span className="mt-1 font-display text-lg font-semibold tracking-tight">
+          {store}
+        </span>
+      </span>
+    </a>
   );
 }
 
@@ -178,7 +211,7 @@ export default function Home() {
               <div className="absolute inset-8 rounded-4xl bg-[radial-gradient(circle,rgba(30,201,167,0.28),transparent_70%)] blur-2xl" />
               <div className="animate-float relative w-full max-w-sm rounded-[1.75rem] border border-white/70 bg-white/90 p-8 shadow-[0_30px_80px_rgba(15,36,31,0.12)] backdrop-blur">
                 <div className="mx-auto flex aspect-square w-full max-w-60 items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#f4fffb_0%,#e8faf5_100%)] p-5">
-                  <QrPlaceholder />
+                  <DownloadQr />
                 </div>
                 <p className="mt-6 text-center font-display text-lg font-semibold text-ink">
                   Scan to Download
@@ -292,10 +325,10 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
-              <a href={APP_STORE_URL} className="transition hover:text-ink">
+              <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="transition hover:text-ink">
                 App Store
               </a>
-              <a href={GOOGLE_PLAY_URL} className="transition hover:text-ink">
+              <a href={GOOGLE_PLAY_URL} target="_blank" rel="noopener noreferrer" className="transition hover:text-ink">
                 Google Play
               </a>
               <Link href="/privacy" className="transition hover:text-ink">
@@ -339,43 +372,25 @@ function PlayIcon() {
   );
 }
 
-function QrPlaceholder() {
-  const cells = [
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-    [1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-    [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1],
-    [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0],
-    [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0],
-    [1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0],
-  ];
+function DownloadQr() {
+  const { modules } = QRCode.create(DOWNLOAD_URL, { errorCorrectionLevel: "M" });
+  const size = modules.size;
+  let d = "";
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      if (modules.get(y, x)) d += `M${x} ${y}h1v1h-1z`;
+    }
+  }
 
   return (
-    <div
-      className="grid aspect-square w-full gap-0.5 rounded-lg bg-white p-2"
-      style={{ gridTemplateColumns: `repeat(${cells[0].length}, minmax(0, 1fr))` }}
-      aria-hidden
+    <svg
+      viewBox={`-2 -2 ${size + 4} ${size + 4}`}
+      className="aspect-square w-full rounded-lg bg-white"
+      shapeRendering="crispEdges"
+      role="img"
+      aria-label={`QR code linking to ${DOWNLOAD_URL}`}
     >
-      {cells.flatMap((row, y) =>
-        row.map((cell, x) => (
-          <span
-            key={`${y}-${x}`}
-            className={cell ? "rounded-[1px] bg-ink" : "bg-transparent"}
-          />
-        )),
-      )}
-    </div>
+      <path d={d} className="fill-ink" />
+    </svg>
   );
 }
